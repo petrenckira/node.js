@@ -1,0 +1,73 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+**/dist
+/tmp
+/out-tsc
+
+#Angular
+/apps/m3-native-ui/app/modules/**/*.js
+
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Node.js trash
+**/node_modules
+**/.awcache
+**/*.log
+
+# Native build files
+apps/m3-native-ui/src/**/*.js
+apps/m3-native-ui/src/**/*.js.map
+apps/m3-native-ui/**/*.css
+!apps/m3-native-ui/app/assets/**/*.css
+!apps/m3-native-ui/app/fonts/**/*.css
+
+# Web build files
+apps/m3-web/src/**/*.js
+apps/m3-web/src/**/*.js.map
+apps/m3-web/m3-web_old/src/**/*.js
+!apps/m3-web/m3-web_old/src/login-page/**/*.js
+apps/m3-web/m3-web_old/src/**/*.js.map
+
+# Libs build files
+libs/**/*.js
+libs/**/*.js.map
+!libs/aws-plugin/lib/**/*.js
+
+# IDE trash
+**/.idea
