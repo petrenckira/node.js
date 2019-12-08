@@ -1,6 +1,9 @@
 const csv = require('csvtojson');
 const fs = require('fs');
-const csvFilePath = './csv/node_mentoring_t1_2_input_example.csv';
+
+import { handleError } from './error-handle.js';
+
+const csvFilePath = './src/csv/node_mentoring_t1_2_input_example.csv';
 const txtFilePath = 'csvToJson.txt';
 
 const readStream = fs.createReadStream(csvFilePath);
@@ -12,7 +15,3 @@ const csvEntity = csv().on('data',(data) => {
 
 readStream.pipe(csvEntity)
           .on('error', function(e) { handleError(e)});
-
-function handleError(error) {
-  console.error(error);
-}
