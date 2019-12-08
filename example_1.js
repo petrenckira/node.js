@@ -1,15 +1,15 @@
 
 const reverseStr = require('./reverse').reverseStr;
 
-const stdInThread = process.stdin;
-const stdOutThread = process.stdout;
+const stdInStream = process.stdin;
+const stdOutStream = process.stdout;
 
-stdInThread.setEncoding('utf8');
+stdInStream.setEncoding('utf8');
 
-stdInThread.on('readable', () => {
-  const chunk = stdInThread.read();
+stdInStream.on('readable', () => {
+  const chunk = stdInStream.read();
   if (chunk !== null) {
-    stdOutThread.write(reverseStr(chunk));
+    stdOutStream.write(reverseStr(chunk));
   }
 });
 
