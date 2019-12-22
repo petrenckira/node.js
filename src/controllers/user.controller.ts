@@ -8,11 +8,11 @@ export default class UserController {
     this.userList = userList;
   }
 
-  getAllUsers (req: Request, res: Response) {
+  getAllUsers (req: Request, res: Response): void {
    res.json(this.userList);
   }
 
-  getUserById (req: Request, res: Response) {
+  getUserById (req: Request, res: Response): void{
     const {id} = req.params;
     const user = this.userList.find(item => item.id === id);
     if (!user) {
@@ -22,7 +22,7 @@ export default class UserController {
     }
   }
 
-  createUser (req: Request, res: Response) {
+  createUser (req: Request, res: Response): void {
     const { login, password, age, isDeleted = false} = req.body;
     const user = new User (
         login,
@@ -34,7 +34,7 @@ export default class UserController {
     res.send(user);
   }
 
-  updateUser (req: Request, res: Response) {
+  updateUser (req: Request, res: Response): void {
     const { id, login, password, age, isDeleted = false} = req.body;
     const newUser = new User (
         login,
@@ -43,7 +43,7 @@ export default class UserController {
         isDeleted,
         id
     );
-    let oldUser = this.userList.find(item => item.id === newUser.id);
+    const oldUser = this.userList.find(item => item.id === newUser.id);
 
     if(!oldUser) {
       res.status(404).send('No user found!');
@@ -53,9 +53,9 @@ export default class UserController {
     }
   }
 
-  removeUser (req: Request, res: Response) {
+  removeUser (req: Request, res: Response): void{
     const {id} = req.params;
-    let oldUser = this.userList.find(item => item.id === id);
+    const oldUser = this.userList.find(item => item.id === id);
     if(!oldUser) {
       res.status(404).send('No user found!');
     } else {
@@ -64,7 +64,7 @@ export default class UserController {
     }
   }
 
-  getAutoSuggestUsers (req: Request, res: Response) {
+  getAutoSuggestUsers (req: Request, res: Response): void {
     const { loginSubstring, limit = 2 } = req.query;
     const suggestionsList = this.userList.filter(user => user.login.includes(loginSubstring));
     const suggestUsers = suggestionsList.slice(0, limit);

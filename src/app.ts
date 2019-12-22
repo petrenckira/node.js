@@ -5,20 +5,20 @@ class App {
     public app: Application;
     public port: number;
 
-    constructor(appInit: { port: number; middleWares: any;}) {
+    constructor(appInit: { port: number; middleWares }) {
         this.app = express();
         this.port = appInit.port;
 
         this.middlewares(appInit.middleWares);
     }
 
-    private middlewares(middleWares: { forEach: (arg0: (middleWare: any) => void) => void; }) {
+    private middlewares(middleWares: { forEach: (arg0: (middleWare) => void) => void }): void {
         middleWares.forEach(middleWare => {
             this.app.use(middleWare);
         })
     }
 
-    public listen() {
+    public listen(): void{
         this.app.listen(this.port, () => {
             console.log(`App listening on the http://localhost:${this.port}`);
         })
