@@ -1,16 +1,18 @@
+import { Request, Response } from 'express';
 import User from '../models/user.model';
-import userList from '../data/users.json';
 
 export default class UserController {
-  constructor(userList) {
-    this.userList = userList.default;
+  public userList: User [];
+
+  constructor(userList: User []) {
+    this.userList = userList;
   }
 
-  getAllUsers (req, res) {
+  getAllUsers (req: Request, res: Response) {
    res.json(this.userList);
   }
 
-  getUserById (req, res) {
+  getUserById (req: Request, res: Response) {
     const {id} = req.params;
     const user = this.userList.find(item => item.id === id);
     if (!user) {
@@ -20,7 +22,7 @@ export default class UserController {
     }
   }
 
-  createUser (req, res) {
+  createUser (req: Request, res: Response) {
     const { login, password, age, isDeleted = false} = req.body;
     const user = new User (
         login,
@@ -32,7 +34,7 @@ export default class UserController {
     res.send(user);
   }
 
-  updateUser (req, res) {
+  updateUser (req: Request, res: Response) {
     const { id, login, password, age, isDeleted = false} = req.body;
     const newUser = new User (
         login,
@@ -42,7 +44,7 @@ export default class UserController {
         id
     );
     let oldUser = this.userList.find(item => item.id === newUser.id);
-    console.log(oldUser);
+
     if(!oldUser) {
       res.status(404).send('No user found!');
     } else {
@@ -51,7 +53,7 @@ export default class UserController {
     }
   }
 
-  removeUser(req, res) {
+  removeUser (req: Request, res: Response) {
     const {id} = req.params;
     let oldUser = this.userList.find(item => item.id === id);
     if(!oldUser) {
@@ -62,7 +64,7 @@ export default class UserController {
     }
   }
 
-  getAutoSuggestUsers (req, res) {
+  getAutoSuggestUsers (req: Request, res: Response) {
     const { loginSubstring, limit = 2 } = req.query;
     const suggestionsList = this.userList.filter(user => user.login.includes(loginSubstring));
     const suggestUsers = suggestionsList.slice(0, limit);
