@@ -9,10 +9,10 @@ class App {
         this.app = express();
         this.port = appInit.port;
 
-        this.middlewares(appInit.middleWares);
+        this.initMiddleware(appInit.middleWares);
     }
 
-    private middlewares(middleWares: { forEach: (arg0: (middleWare) => void) => void }): void {
+    private initMiddleware(middleWares: { forEach: (arg0: (middleWare) => void) => void }): void {
         middleWares.forEach(middleWare => {
             this.app.use(middleWare);
         })
