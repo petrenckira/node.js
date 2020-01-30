@@ -4,10 +4,11 @@ import { createValidator } from 'express-joi-validation';
 import * as userList from '../data/users.json';
 import UserController from '../controllers/user.controller';
 import { userSchema } from '../validations/user.validation';
+import { userServiceInstance } from '../services/user.service';
 
 const userRouter = Router();
 const validator = createValidator({});
-const userController = new UserController(userList);
+const userController = new UserController(userList, userServiceInstance);
 
 userRouter.get('/', userController.getAllUsers.bind(userController))
       .get('/autoSuggest', userController.getAutoSuggestUsers.bind(userController))

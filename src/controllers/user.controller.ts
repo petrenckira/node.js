@@ -1,15 +1,17 @@
 import { Request, Response } from 'express';
-import User from '../models/user.model';
+import User from '../interfaces/user.model';
+import { UserInterface } from '../interfaces/user.interface';
+import UserService from '../services/user.service';
 
 export default class UserController {
-  public userList: User [];
 
-  constructor(userList: User []) {
-    this.userList = userList;
+  constructor(public userList: User [],
+              public userService: UserService) {
   }
 
   getAllUsers (req: Request, res: Response): void {
-   res.json(this.userList);
+    const users = this.userService.getAllUsers();
+    res.json(users);
   }
 
   getUserById (req: Request, res: Response): void{
@@ -24,13 +26,14 @@ export default class UserController {
 
   createUser (req: Request, res: Response): void {
     const { login, password, age, isDeleted = false} = req.body;
-    const user = new User (
+    const user = {
         login,
         password,
         age,
         isDeleted
-    );
-    this.userList.push(user);
+    };
+    this.userService.createUser(user);
+    // this.userList.push(user);
     res.send(user);
   }
 

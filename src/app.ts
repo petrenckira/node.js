@@ -1,13 +1,17 @@
 import * as express from 'express'
 import { Application } from 'express'
+import { Sequelize } from 'sequelize';
 
 class App {
     public app: Application;
     public port: number;
+    public db: Sequelize;
 
-    constructor(appInit: { port: number; middleWares }) {
+    constructor(appInit: { port: number; middleWares; db: Sequelize }) {
         this.app = express();
         this.port = appInit.port;
+        this.db = appInit.db;
+        console.log(this.db);
 
         this.initMiddleware(appInit.middleWares);
     }
@@ -19,9 +23,11 @@ class App {
     }
 
     public listen(): void{
-        this.app.listen(this.port, () => {
-            console.log(`App listening on the http://localhost:${this.port}`);
-        })
+        this.db.sync().then(()=> {
+            this.app.listen(this.port, () => {
+                console.log(`App listening on the http://localhost:${this.port}`);
+            });
+        });
     }
 }
 

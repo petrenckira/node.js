@@ -1,16 +1,38 @@
-export default class User {
+import { Sequelize, DataTypes } from 'sequelize';
+import { dbInstance } from './../data-access/database';
+export default class UserModel {
+  public user;
 
-  public id: string;
-  public login: string;
-  public password: string;
-  public age: number;
-  public isDeleted: boolean;
+  constructor( public db: Sequelize) {
+    this.createUserModel();
 
-  constructor( login, password, age, isDeleted, id?) {
-     this.id = id || String(Math.floor(Math.random() * 100000));
-     this.login = login;
-     this.password = password;
-     this.age = age;
-     this.isDeleted = isDeleted;
-   }
+    return this.user;
+  }
+
+  createUserModel(): void {
+    this.user = this.db.define('user', {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue:DataTypes.UUIDV4,
+        unique: true,
+        primaryKey: true
+      },
+      login: {
+        type: DataTypes.STRING,
+        unique: true,
+      },
+      password: {
+        type: DataTypes.STRING,
+      },
+      age: {
+        type: DataTypes.NUMBER,
+      },
+      isDeleted: {
+        type: DataTypes.BOOLEAN,
+      }
+    });
+  }
+
 }
+
+export const userModelInstance = new UserModel(dbInstance);
