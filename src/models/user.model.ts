@@ -19,7 +19,6 @@ export default class UserModel {
       },
       login: {
         type: DataTypes.STRING,
-        unique: true,
       },
       password: {
         type: DataTypes.STRING,

@@ -1,6 +1,7 @@
 import * as express from 'express'
 import { Application } from 'express'
 import { Sequelize } from 'sequelize';
+import { userServiceInstance } from './services/user.service';
 
 class App {
     public app: Application;
@@ -11,7 +12,6 @@ class App {
         this.app = express();
         this.port = appInit.port;
         this.db = appInit.db;
-        console.log(this.db);
 
         this.initMiddleware(appInit.middleWares);
     }

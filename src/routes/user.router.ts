@@ -8,11 +8,11 @@ import { userServiceInstance } from '../services/user.service';
 
 const userRouter = Router();
 const validator = createValidator({});
-const userController = new UserController(userList, userServiceInstance);
+const userController = new UserController(userServiceInstance);
 
-userRouter.get('/', userController.getAllUsers.bind(userController))
-      .get('/autoSuggest', userController.getAutoSuggestUsers.bind(userController))
+userRouter.get('/autoSuggest', userController.getAutoSuggestUsers.bind(userController))
       .get('/:id', userController.getUserById.bind(userController))
+      .get('/', userController.getAllUsers.bind(userController))
       .post('/', validator.body(userSchema), userController.createUser.bind(userController))
       .put('/', validator.body(userSchema), userController.updateUser.bind(userController))
       .delete('/:id', userController.removeUser.bind(userController));
