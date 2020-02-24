@@ -1,9 +1,8 @@
 import * as express from 'express'
 import { Application } from 'express'
 import { Sequelize } from 'sequelize';
-import { userServiceInstance } from './services/user.service';
 
-class App {
+export default class App {
     public app: Application;
     public port: number;
     public db: Sequelize;
@@ -30,5 +29,3 @@ class App {
         });
     }
 }
-
-export default App

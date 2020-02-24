@@ -1,9 +1,6 @@
-import UserModel from '../models/user.model';
 import { UserInterface } from '../interfaces/user.interface';
 import { userModelInstance } from './../models/user.model';
-import * as userInfo from './../data/users.json';
 import { Model, Op} from 'sequelize';
-
 
 const defaultUser = {
   "login": "petrenckira",

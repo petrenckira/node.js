@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { createValidator } from 'express-joi-validation';
 
-import * as userList from '../data/users.json';
 import UserController from '../controllers/user.controller';
 import { userSchema } from '../validations/user.validation';
 import { userServiceInstance } from '../services/user.service';

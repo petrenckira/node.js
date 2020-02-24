@@ -4,8 +4,7 @@ import UserService from '../services/user.service';
 
 export default class UserController {
 
-  constructor(public userService: UserService) {
-  }
+  constructor(public userService: UserService) {}
 
   getAllUsers (req: Request, res: Response): void {
     this.userService.getUsers().then((userList) => {
@@ -18,10 +17,9 @@ export default class UserController {
     this.userService.getUserById(id).then((user) => {
       //to move to handleError method logic
       if (!user) {
-        res.status(404).send('No user found!');
-      } else {
-        res.send(user);
+        return res.status(404).send('No user found!');
       }
+        res.send(user);
     });
   }
 
