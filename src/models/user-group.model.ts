@@ -19,7 +19,7 @@ export default class UserGroupModel {
         unique: true,
         primaryKey: true
       },
-      group_id: {
+      groupId: {
         type: DataTypes.UUID,
         references: {
           model: 'group',
@@ -28,7 +28,7 @@ export default class UserGroupModel {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       },
-      user_id: {
+      userId: {
         type: DataTypes.UUID,
         references: {
           model: 'user',
@@ -40,8 +40,8 @@ export default class UserGroupModel {
     });
 
     this.userGroup.associate = (): void => {
-      this.userGroup.belongsTo(models.user, { foreignKey: 'id', targetKey: 'user_id', as: 'user' });
-      this.userGroup.belongsTo(models.group, { foreignKey: 'id', targetKey: 'group_id', as: 'group' });
+      this.userGroup.belongsTo(models.user, { foreignKey: 'id', targetKey: 'userId', as: 'user' });
+      this.userGroup.belongsTo(models.group, { foreignKey: 'id', targetKey: 'groupId', as: 'group' });
     }
 
   }

@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import { dbInstance } from './../data-access/database';
-import { models } from '../models';
+
 export default class UserModel {
   public user;
 
@@ -31,10 +31,6 @@ export default class UserModel {
         type: DataTypes.BOOLEAN,
       }
     });
-
-    // this.user.associate = (): void=> {
-    //   this.user.belongsToMany(models.group, { as: 'belong_to_groups', through: models.userGroup, foreignKey: 'user_id'});
-    // }
   }
 }
 

@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import { dbInstance } from './../data-access/database';
-import { models } from './index';
+import { userModelInstance } from './user.model';
 export default class GroupModel {
   public group;
 
@@ -26,10 +26,7 @@ export default class GroupModel {
       }
     });
 
-    // this.group.associate = (): void=> {
-    //   this.group.belongsToMany(models.user, { as: 'users_in_group', through: models.userGroup, foreignKey: 'group_id'});
-    // }
-
+    this.group.belongsToMany(userModelInstance, { as: 'users_in_group', through: 'userGroup' });
   }
 
 }

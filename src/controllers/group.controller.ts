@@ -55,7 +55,7 @@ export default class GroupController {
     const { groupId } = req.params;
     const userIds = req.body.user_ids;
     this.groupService.addUsersToGroup(groupId, userIds).then( userList => {
-      console.log('succeess', userList);
+      console.log(userList);
       if(!userList) {
         return res.status(404).send('No group found!');
       }
