@@ -1,8 +1,7 @@
 import { GroupInterface } from '../interfaces/group.interface';
-import { groupModelInstance } from './../models/group.model';
+// import { groupModelInstance } from './../models/group.model';
 import { Model} from 'sequelize';
-import { threadId } from 'worker_threads';
-import { userServiceInstance } from './user.service';
+import { models } from './../models';
 
 
 export default class GroupService {
@@ -17,7 +16,7 @@ export default class GroupService {
   }
 
   async getGroups(): Promise <Array<Model>> {
-    return this.groupModel.findAll()
+    return this.groupModel.findAll({include: 'users'})
            .then(res => res)
            .catch(e => console.log(e));
   }
@@ -53,11 +52,12 @@ export default class GroupService {
       }
     }).then(group => {
       console.log(group);
-      return group.addUsers(userIds);
+      console.log(group.get());
+      return group.setUsers(userIds).catch(e => console.log(e))
     })
     .catch(e => console.log(e));
   }
 
  }
 
-export const groupServiceInstance = new GroupService(groupModelInstance, userServiceInstance);
+export const groupServiceInstance = new GroupService(models.group, models.user);

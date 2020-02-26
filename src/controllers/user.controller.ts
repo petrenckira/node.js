@@ -47,10 +47,9 @@ export default class UserController {
     };
     this.userService.updateUser(newUser).then((newUser) => {
       if(!newUser) {
-        res.status(404).send('No user found!');
-      } else {
-        res.send(newUser);
+        return res.status(404).send('No user found!');
       }
+      res.send(newUser);
     });
   }
 
@@ -58,17 +57,14 @@ export default class UserController {
     const {id} = req.params;
     this.userService.removeUser(id).then((oldUser) => {
       if(!oldUser) {
-        res.status(404).send('No user found!');
-      } else {
-        res.send('User was deleted');
+        return res.status(404).send('No user found!');
       }
+      res.send('User was deleted');
     });
   }
 
   getAutoSuggestUsers (req: Request, res: Response): void {
     const config = req.query;
-    console.log('getAutoSuggestUsers');
-    console.log(config);
     this.userService.getUsers(config).then((suggestUsers) => {
       res.json(suggestUsers)
     });

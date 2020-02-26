@@ -1,5 +1,4 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { dbInstance } from './../data-access/database';
 
 export default class UserModel {
   public user;
@@ -31,7 +30,11 @@ export default class UserModel {
         type: DataTypes.BOOLEAN,
       }
     });
+
+    this.user.associate = (models): void => {
+      const { userGroup, group } = models;
+      this.user.belongsToMany(group, {through: userGroup});
+    }
+
   }
 }
-
-export const userModelInstance = new UserModel(dbInstance);

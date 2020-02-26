@@ -1,13 +1,16 @@
-import { groupModelInstance } from './group.model';
-import { userModelInstance } from './user.model';
-// import { userGroupModelInstance } from './user-group.model';
-
+import GroupModel from './group.model';
+import UserModel from './user.model';
+import UserGroupModel from './user-group.model';
+import { dbInstance } from './../data-access/database';
 
 export const models = {
-  user: userModelInstance,
-  group: groupModelInstance,
-  // userGroup: userGroupModelInstance
+  user: new UserModel(dbInstance),
+  userGroup: new UserGroupModel(dbInstance),
+  group: new GroupModel(dbInstance),
 };
 
-// userModelInstance.belongsToMany(groupModelInstance, { through: 'UserGroup' });
-// groupModelInstance.belongsToMany(userModelInstance, { through: 'UserGroup' });
+Object.keys(models).forEach(modelKey => {
+  if ('associate' in models[modelKey]) {
+    models[modelKey].associate(models)
+  }
+})

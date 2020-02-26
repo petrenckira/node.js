@@ -1,6 +1,8 @@
 import { UserInterface } from '../interfaces/user.interface';
-import { userModelInstance } from './../models/user.model';
+// import { userModelInstance } from '../models/user.model';
 import { Model, Op} from 'sequelize';
+
+import { models } from './../models';
 
 const defaultUser = {
   "login": "petrenckira",
@@ -30,7 +32,7 @@ export default class UserService {
 
   async getUsers(config?: { loginSubstring?: string; limit?: number }): Promise<Array<UserInterface>> {
     const userList = [];
-    let options = {};
+    let options: any = { include: 'groups'};
     if (config) {
      options = {
         where: {
@@ -39,7 +41,8 @@ export default class UserService {
             [Op.like]: '%' + config.loginSubstring + '%'
           }
         },
-        limit: config.limit
+        limit: config.limit,
+        include: 'groups'
       };
     }
 
@@ -56,7 +59,7 @@ export default class UserService {
 
   async getUserById(userId: string): Promise<any> {
     try {
-      const user = await this.userModel.findByPk(userId);
+      const user = await this.userModel.findByPk(userId, {include: 'groups'});
       return user.toJSON();
     } catch (err) {
       console.log(err);
@@ -87,4 +90,4 @@ export default class UserService {
   }
  }
 
-export const userServiceInstance = new UserService(userModelInstance);
+export const userServiceInstance = new UserService(models.user);

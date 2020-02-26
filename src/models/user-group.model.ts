@@ -1,6 +1,4 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { dbInstance } from './../data-access/database';
-import { models } from '../models';
 
 export default class UserGroupModel {
   public userGroup;
@@ -12,7 +10,7 @@ export default class UserGroupModel {
   }
 
   createUserGroupModel(): void {
-    this.userGroup = this.db.define('userGroup', {
+    this.userGroup = this.db.define('userGroups', {
       id: {
         type: DataTypes.UUID,
         defaultValue:DataTypes.UUIDV4,
@@ -36,16 +34,9 @@ export default class UserGroupModel {
         },
         onDelete: 'cascade',
         onUpdate: 'cascade',
-      }
+      },
     });
-
-    this.userGroup.associate = (): void => {
-      this.userGroup.belongsTo(models.user, { foreignKey: 'id', targetKey: 'userId', as: 'user' });
-      this.userGroup.belongsTo(models.group, { foreignKey: 'id', targetKey: 'groupId', as: 'group' });
-    }
 
   }
 
 }
-
-export const userGroupModelInstance = new UserGroupModel(dbInstance);

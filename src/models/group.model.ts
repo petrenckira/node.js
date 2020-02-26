@@ -1,6 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { dbInstance } from './../data-access/database';
-import { userModelInstance } from './user.model';
+
 export default class GroupModel {
   public group;
 
@@ -26,9 +25,10 @@ export default class GroupModel {
       }
     });
 
-    this.group.belongsToMany(userModelInstance, { as: 'users_in_group', through: 'userGroup' });
+    this.group.associate = (models): void => {
+      const { userGroup, user } = models;
+      this.group.belongsToMany(user, { through: userGroup});
+    }
   }
 
 }
-
-export const groupModelInstance = new GroupModel(dbInstance);

@@ -15,10 +15,9 @@ export default class GroupController {
     const {id} = req.params;
     this.groupService.getGroupById(id).then((group) => {
       if (!group) {
-        res.status(404).send('No group found!');
-      } else {
-        res.send(group);
+        return res.status(404).send('No group found!');
       }
+      res.send(group);
     });
   }
 
@@ -33,10 +32,9 @@ export default class GroupController {
     const newGroup = req.body;
     this.groupService.updateGroup(newGroup).then((newGroup) => {
       if(!newGroup) {
-        res.status(404).send('No group found!');
-      } else {
-        res.send(newGroup);
+        return res.status(404).send('No group found!');
       }
+      res.send(newGroup);
     });
   }
 
@@ -44,10 +42,9 @@ export default class GroupController {
     const {id} = req.params;
     this.groupService.removeGroup(id).then((oldGroup) => {
       if(!oldGroup) {
-        res.status(404).send('No group found!');
-      } else {
-        res.send('Group was deleted');
+        return res.status(404).send('No group found!');
       }
+      res.send('Group was deleted');
     });
   }
 
@@ -55,7 +52,6 @@ export default class GroupController {
     const { groupId } = req.params;
     const userIds = req.body.user_ids;
     this.groupService.addUsersToGroup(groupId, userIds).then( userList => {
-      console.log(userList);
       if(!userList) {
         return res.status(404).send('No group found!');
       }
