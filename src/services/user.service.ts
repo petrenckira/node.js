@@ -17,76 +17,67 @@ export default class UserService {
   }
 
   async createDefaultUser(): Promise<Model> {
-    try {
       const user = await this.userModel.create(defaultUser);
-      console.log('success', user.toJSON());
       return user;
-    } catch (err) {
-      console.log(err);
-    }
   }
 
   async createUser(userData: UserInterface): Promise<Model> {
     return await this.userModel.create(userData);
   }
 
-  async getUsers(config?: { loginSubstring?: string; limit?: number }): Promise<Array<UserInterface>> {
+  async getUsers(config?: { loginSubstring?: string; limit?: number; isFullLogin?: boolean}): Promise<Array<UserInterface>> {
     const userList = [];
     let options: any = { include: 'groups'};
     if (config) {
+
+      let login: any = {
+        [Op.like]: '%' + config.loginSubstring + '%'
+      };
+
+      if (config.isFullLogin) {
+        login = {
+          login: config.loginSubstring
+        }
+      }
+
      options = {
-        where: {
-          login:
-          {
-            [Op.like]: '%' + config.loginSubstring + '%'
-          }
-        },
+        where: login,
         limit: config.limit,
         include: 'groups'
       };
     }
 
-    try {
       const users = await this.userModel.findAll(options);
       users.map((user) => userList.push(user.toJSON()));
       console.log(userList);
       return userList;
-    } catch (err) {
-      console.log(err);
-    }
-    
   }
 
   async getUserById(userId: string): Promise<any> {
-    try {
-      const user = await this.userModel.findByPk(userId, {include: 'groups'});
-      return user.toJSON();
-    } catch (err) {
-      console.log(err);
-    }
+    const user = await this.userModel.findByPk(userId, {include: 'groups'});
+    return user.toJSON();
+
+  }
+
+  async getUserByLogin(login: string): Promise<any> {
+    const user = await this.userModel.findByPk(login, {include: 'groups'});
+    return user.toJSON();
+
   }
 
   async updateUser(newUserData: UserInterface): Promise<UserInterface> {
-    try {
-      const [rowsUpdate, [updatedUser]] = await this.userModel.update(newUserData, {returning: true, where: {id: newUserData.id}});
-      return updatedUser.toJSON();
-    } catch (err) {
-      console.log(err);
-    }
+    const [rowsUpdate, [updatedUser]] = await this.userModel.update(newUserData, {returning: true, where: {id: newUserData.id}});
+    return updatedUser.toJSON();
   }
 
   async removeUser(userId: string): Promise <boolean> {
-    try {
-      await this.userModel.destroy({
-        returning: true,
-        where:{
-          id: userId
-        }
-      });
-      return true;
-    } catch (err) {
-      console.log(err);
-    }
+    await this.userModel.destroy({
+      returning: true,
+      where:{
+        id: userId
+      }
+    });
+    return true;
   }
  }
 

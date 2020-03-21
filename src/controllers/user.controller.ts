@@ -1,29 +1,32 @@
 import { Request, Response } from 'express';
-import { UserInterface } from '../interfaces/user.interface';
 import UserService from '../services/user.service';
+import { HttpError } from '../helpers/error-handler';
 
 export default class UserController {
 
   constructor(public userService: UserService) {}
 
-  getAllUsers (req: Request, res: Response): void {
+  getAllUsers (req: Request, res: Response, next): void {
     this.userService.getUsers().then((userList) => {
       res.json(userList);
+    }).catch(error => {
+      next(error);
     });
   }
 
-  getUserById (req: Request, res: Response): void{
+  getUserById (req: Request, res: Response, next): void{
     const {id} = req.params;
     this.userService.getUserById(id).then((user) => {
-      //to move to handleError method logic
       if (!user) {
-        return res.status(404).send('No user found!');
+        throw new HttpError(404, 'No user found!' )
       }
         res.send(user);
+    }).catch(error => {
+      next(error);
     });
   }
 
-  createUser (req: Request, res: Response): void {
+  createUser (req: Request, res: Response, next): void {
     const { login, password, age, isDeleted = false} = req.body;
     const user = {
         login,
@@ -33,10 +36,12 @@ export default class UserController {
     };
     this.userService.createUser(user).then((createdUser) => {
       res.send(createdUser);
+    }).catch(error => {
+      next(error);
     });
   }
 
-  updateUser (req: Request, res: Response): void {
+  updateUser (req: Request, res: Response, next): void {
     const { id, login, password, age, isDeleted = false} = req.body;
     const newUser = {
         id,
@@ -47,26 +52,32 @@ export default class UserController {
     };
     this.userService.updateUser(newUser).then((newUser) => {
       if(!newUser) {
-        return res.status(404).send('No user found!');
+        throw new HttpError(404, 'No user found!' )
       }
       res.send(newUser);
+    }).catch(error => {
+      next(error);
     });
   }
 
-  removeUser (req: Request, res: Response): void{
+  removeUser (req: Request, res: Response, next): void{
     const {id} = req.params;
     this.userService.removeUser(id).then((oldUser) => {
       if(!oldUser) {
-        return res.status(404).send('No user found!');
+        throw new HttpError(404, 'No user found!' )
       }
       res.send('User was deleted');
+    }).catch(error => {
+      next(error);
     });
   }
 
-  getAutoSuggestUsers (req: Request, res: Response): void {
+  getAutoSuggestUsers (req: Request, res: Response, next): void {
     const config = req.query;
     this.userService.getUsers(config).then((suggestUsers) => {
       res.json(suggestUsers)
+    }).catch(error => {
+      next(error);
     });
   };
 }
