@@ -16,7 +16,7 @@ const app = new App({
         bodyParser.urlencoded({ extended: true }),
         loggerServiceInstance.logMethodInfo,
         router,
-        errorHandlerInstance.logErrorsMiddleware,
+        loggerServiceInstance.logErrors,
         errorHandlerInstance.handleErrorMiddleware
     ],
     db: dbInstance

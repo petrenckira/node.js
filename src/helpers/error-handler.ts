@@ -21,12 +21,6 @@ export class ErrorHandler {
     });
   }
 
-  logErrorsMiddleware(err, req, res, next): void {
-    //add winston log errors
-    // console.error(err.stack);
-    next(err);
-  }
-
   //arrow function for avoiding bind
   handleErrorMiddleware = (err, req, res, next) => {
     this.handleError(err, res);
