@@ -49,7 +49,6 @@ export default class UserService {
 
       const users = await this.userModel.findAll(options);
       users.map((user) => userList.push(user.toJSON()));
-      console.log(userList);
       return userList;
   }
 

@@ -4,13 +4,13 @@ import { HttpError } from '../helpers/error-handler';
 import { userServiceInstance } from './../services/user.service';
 import * as jwt from 'jsonwebtoken';
 
-const accessTokenSecret = 'badwayofsetingaccesstoken';
+const accessTokenSecret = process.env.JWT_SECRET;
 
 export default class AuthController {
 
   constructor(public userService: UserService) {}
 
-  login (req: Request, res: Response, next): void {
+  login = (req: Request, res: Response, next): void => {
     const { username, password } = req.body;
 
     this.userService.getUsers({loginSubstring: username, limit:1, isFullLogin:true})

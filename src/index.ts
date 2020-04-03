@@ -1,23 +1,15 @@
-import * as bodyParser from 'body-parser'
-import * as cors from 'cors';
-
+import 'dotenv/config';
 import App from './app'
-import router from './routes/index';
 import { dbInstance } from './data-access/database';
-import { loggerServiceInstance } from './services/logger.service';
-import { errorHandlerInstance } from './helpers/error-handler';
+import UserController from './controllers/user.controller';
+import { models } from './models'
 
+const PORT = process.env.PORT;
 
 const app = new App({
-    port: 3000,
-    middleWares: [
-        cors(),
-        bodyParser.json(),
-        bodyParser.urlencoded({ extended: true }),
-        loggerServiceInstance.logMethodInfo,
-        router,
-        loggerServiceInstance.logErrors,
-        errorHandlerInstance.handleErrorMiddleware
+    port: PORT,
+    controllers:[
+        new UserController(models.user)
     ],
     db: dbInstance
 })

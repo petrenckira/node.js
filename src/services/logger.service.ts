@@ -17,6 +17,7 @@ export class LoggerService {
   }
 
   logErrors = (err, req, res, next): void =>{
+    // console.error(err);
     this.logger.error( err);
     next(err);
   }

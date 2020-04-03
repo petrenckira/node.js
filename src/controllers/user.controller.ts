@@ -1,12 +1,45 @@
-import { Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
+import { createValidator } from 'express-joi-validation';
+import { userSchema } from '../validations/user.validation';
+
 import UserService from '../services/user.service';
 import { HttpError } from '../helpers/error-handler';
+import { models } from './../models'
+import AuthController from './auth.controller';
+import { Model } from 'sequelize/types';
+// import { authController } from './../controllers/auth.controller';
+
 
 export default class UserController {
 
-  constructor(public userService: UserService) {}
+  public path = '/users';
+  public router = Router();
+  public validator = createValidator({});
+  private userService: UserService;
+  private authController: AuthController;
 
-  getAllUsers (req: Request, res: Response, next): void {
+
+  constructor( public userModel) {
+    this.userService = new UserService(userModel);
+    this.authController = new AuthController(this.userService);
+    this.initRoutes();
+  }
+
+  public initRoutes(): void {
+    const userRouter = Router();
+    userRouter.get('/autoSuggest', this.getAutoSuggestUsers)
+    .get('/:id', this.getUserById)
+    .get('/', this.getAllUsers)
+    .post('/', this.validator.body(userSchema), this.createUser)
+    .put('/', this.validator.body(userSchema), this.updateUser)
+    .delete('/:id', this.removeUser);
+
+    // this.router.use('/users', this.authController.checkJWT, userRouter);
+    this.router.use(this.path, userRouter);
+
+  }
+
+  getAllUsers = (req: Request, res: Response, next): void => {
     this.userService.getUsers().then((userList) => {
       res.json(userList);
     }).catch(error => {
@@ -14,7 +47,7 @@ export default class UserController {
     });
   }
 
-  getUserById (req: Request, res: Response, next): void{
+  getUserById = (req: Request, res: Response, next): void => {
     const {id} = req.params;
     this.userService.getUserById(id).then((user) => {
       if (!user) {
@@ -26,7 +59,7 @@ export default class UserController {
     });
   }
 
-  createUser (req: Request, res: Response, next): void {
+  createUser = (req: Request, res: Response, next): void => {
     const { login, password, age, isDeleted = false} = req.body;
     const user = {
         login,
@@ -41,7 +74,7 @@ export default class UserController {
     });
   }
 
-  updateUser (req: Request, res: Response, next): void {
+  updateUser = (req: Request, res: Response, next): void => {
     const { id, login, password, age, isDeleted = false} = req.body;
     const newUser = {
         id,
@@ -60,7 +93,7 @@ export default class UserController {
     });
   }
 
-  removeUser (req: Request, res: Response, next): void{
+  removeUser = (req: Request, res: Response, next): void => {
     const {id} = req.params;
     this.userService.removeUser(id).then((oldUser) => {
       if(!oldUser) {
@@ -72,7 +105,7 @@ export default class UserController {
     });
   }
 
-  getAutoSuggestUsers (req: Request, res: Response, next): void {
+  getAutoSuggestUsers = (req: Request, res: Response, next): void => {
     const config = req.query;
     this.userService.getUsers(config).then((suggestUsers) => {
       res.json(suggestUsers)
