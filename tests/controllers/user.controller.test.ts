@@ -17,11 +17,18 @@ const user = {
   createdAt: '2019-06-03 13:13:45',
   updatedAt: '2019-06-03 13:13:45'
 }
+const user1 = {
+  ...inputUser,
+  id:'aced809d-309a-4087-9044-4d155ecc5076',
+  createdAt: '2019-06-03 13:13:45',
+  updatedAt: '2019-06-03 13:13:45'
+}
 
 const DBConnectionMock = new SequelizeMock();
 const UserModel = DBConnectionMock.define('user');
 UserModel.$queueResult([
-  UserModel.build(user)
+  UserModel.build(user),
+  UserModel.build(user1)
 ]);
 const userController = new UserController(UserModel);
 const app = new App({
@@ -54,6 +61,16 @@ describe('The User Controller', () => {
           .expect(message)
       })
 
+    })
+  })
+
+  describe('GET /users/:id', () => {
+    describe('if the user does not exists', () => {
+      it('response should send code 500 (validation error)', () => {
+        return request(app.getServer())
+          .get('/users/34')
+          .expect(500)
+      })
     })
   })
 });

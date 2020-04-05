@@ -4,11 +4,7 @@ import { userSchema } from '../validations/user.validation';
 
 import UserService from '../services/user.service';
 import { HttpError } from '../helpers/error-handler';
-import { models } from './../models'
 import AuthController from './auth.controller';
-import { Model } from 'sequelize/types';
-// import { authController } from './../controllers/auth.controller';
-
 
 export default class UserController {
 

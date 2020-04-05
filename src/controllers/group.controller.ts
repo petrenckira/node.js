@@ -1,14 +1,41 @@
-import { Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
+import { createValidator } from 'express-joi-validation';
 import GroupService from '../services/group.service';
 import { HttpError } from '../helpers/error-handler';
-
-
+import UserService from '../services/user.service';
+import { groupSchema, userGroupSchema } from '../../src/validations/group.validation';
 
 export default class GroupController {
 
-  constructor(public groupService: GroupService) {}
+  public path = '/groups';
+  public router = Router();
+  public validator = createValidator({});
+  private groupService: GroupService;
+  private userService: UserService;
 
-  getAllGroups (req: Request, res: Response, next): void {
+  constructor(public groupModel, public userModel) {
+    this.userService = new UserService(userModel);
+    this.groupService = new GroupService(groupModel, this.userService);
+
+    this.initRoutes();
+  }
+
+  public initRoutes(): void {
+    const groupRouter = Router();
+    groupRouter.get('/error', (req, res): void => {
+                    throw new HttpError(500, 'Internal server error');
+              })
+              .get('/:id', this.getGroupById)
+              .get('/', this.getAllGroups)
+              .post('/', this.validator.body(groupSchema), this.createGroup)
+              .put('/', this.validator.body(groupSchema), this.updateGroup)
+              .put('/:groupId', this.validator.body(userGroupSchema), this.addUsersToGroup)
+              .delete('/:id', this.removeGroup)
+
+    this.router.use(this.path, groupRouter);
+  }
+
+  getAllGroups = (req: Request, res: Response, next): void => {
     this.groupService.getGroups().then((groupList) => {
       if(!groupList) {
         throw new HttpError(404,'No group found!');
@@ -19,7 +46,7 @@ export default class GroupController {
     });
   }
 
-  getGroupById (req: Request, res: Response, next): void{
+  getGroupById = (req: Request, res: Response, next): void =>{
     const {id} = req.params;
     this.groupService.getGroupById(id).then((group) => {
       if (!group) {
@@ -31,7 +58,7 @@ export default class GroupController {
     });
   }
 
-  createGroup (req: Request, res: Response, next): void {
+  createGroup = (req: Request, res: Response, next): void =>{
     const group = req.body;
     this.groupService.createGroup(group).then((createdGroup) => {
       res.send(createdGroup);
@@ -40,7 +67,7 @@ export default class GroupController {
     });
   }
 
-  updateGroup (req: Request, res: Response, next): void {
+  updateGroup = (req: Request, res: Response, next): void => {
     const newGroup = req.body;
     this.groupService.updateGroup(newGroup).then((newGroup) => {
       if(!newGroup) {
@@ -52,7 +79,7 @@ export default class GroupController {
     });
   }
 
-  removeGroup (req: Request, res: Response, next): void{
+  removeGroup = (req: Request, res: Response, next): void =>{
     const {id} = req.params;
     this.groupService.removeGroup(id).then((oldGroup) => {
       if(!oldGroup) {
@@ -64,7 +91,7 @@ export default class GroupController {
     });
   }
 
-  addUsersToGroup (req: Request, res: Response, next): void {
+  addUsersToGroup = (req: Request, res: Response, next): void => {
     const { groupId } = req.params;
     const userIds = req.body.user_ids;
     this.groupService.addUsersToGroup(groupId, userIds).then( userList => {

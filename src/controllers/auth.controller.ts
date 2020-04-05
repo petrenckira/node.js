@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import UserService from '../services/user.service';
 import { HttpError } from '../helpers/error-handler';
 import { userServiceInstance } from './../services/user.service';
@@ -8,9 +8,22 @@ const accessTokenSecret = process.env.JWT_SECRET;
 
 export default class AuthController {
 
-  constructor(public userService: UserService) {}
+  public router = Router();
+  private userService: UserService;
+
+  constructor(public userModel: any) {
+    this.userService = new UserService(userModel);
+    this.initRoutes();
+  }
+
+  public initRoutes(): void {
+    const authRouter = Router();
+    authRouter.post('/', this.login);
+    this.router.use('/login', authRouter);
+  }
 
   login = (req: Request, res: Response, next): void => {
+    console.log('login');
     const { username, password } = req.body;
 
     this.userService.getUsers({loginSubstring: username, limit:1, isFullLogin:true})
@@ -46,5 +59,3 @@ export default class AuthController {
   }
 
 }
-
-export const authController = new AuthController(userServiceInstance);
